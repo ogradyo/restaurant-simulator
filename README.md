@@ -1,99 +1,185 @@
-# Restaurant Order Processing Simulator
+# ACSP (A Chicken Sandwich Place) Restaurant Simulator
 
-A Golang program that simulates a restaurant processing orders with realistic kitchen operations, order management, and delivery simulation.
+A comprehensive restaurant simulation system that handles drive-thru, dine-in, and external delivery service orders (Uber Eats, Grubhub, DoorDash) with an ACSP inspired menu.
 
 ## Features
 
-- **Order Management**: Create, queue, and track orders through their lifecycle
-- **Kitchen Simulation**: Multiple chefs working in parallel with capacity limits
-- **Realistic Timing**: Different prep times for different menu items
-- **Delivery System**: Simulated delivery times for completed orders
-- **Statistics Tracking**: Real-time monitoring of restaurant operations
-- **Concurrent Processing**: Uses goroutines for parallel order processing
+### Order Types
+- **Drive-Thru**: Traditional drive-through orders
+- **Dine-In**: In-restaurant dining orders  
+- **External Delivery**: Integration with delivery services
+  - Uber Eats
+  - Grubhub
+  - DoorDash
 
-## Order Lifecycle
+### Menu Categories
+- Sandwiches (Chicken Sandwich, Deluxe, Spicy, Grilled)
+- Chicken Strips & Nuggets
+- Salads (Cobb, Market)
+- Sides (Waffle Fries, Mac & Cheese, Fruit Cup)
+- Beverages (Lemonade, Sweet Tea, Soft Drinks, Milkshakes)
+- Desserts (Cookies, Brownies)
+- Breakfast Items
+- Kids Meals
 
-1. **Received**: Order is created and added to the kitchen queue
-2. **Preparing**: Kitchen staff is working on the order
-3. **Ready**: Order is completed and ready for delivery
-4. **Delivered**: Order has been delivered to the customer
+### Order Management
+- Real-time order processing
+- Order status tracking (Pending → Confirmed → Preparing → Ready → Completed)
+- Queue management and wait time estimation
+- Order customization and special instructions
+- Customer management with loyalty program support
 
-## Menu Items
+### External Service Integration
+- Mock API integrations for delivery services
+- Automatic order creation in external systems
+- Status synchronization
+- Delivery fee and service fee calculation
+- Order cancellation handling
 
-The simulator includes a variety of menu items with different preparation times:
+## Installation
 
-- **Classic Burger** - $12.99 (8 minutes prep)
-- **Margherita Pizza** - $15.99 (12 minutes prep)
-- **Spaghetti Carbonara** - $14.99 (10 minutes prep)
-- **Caesar Salad** - $9.99 (5 minutes prep)
-- **Tomato Soup** - $6.99 (3 minutes prep)
-- **French Fries** - $4.99 (4 minutes prep)
+1. Clone or download the project files
+2. Ensure Python 3.7+ is installed
+3. No additional dependencies required (uses only Python standard library)
 
-## Running the Simulation
+## Usage
 
+### Running the Simulator
+
+**Option 1: Direct execution**
 ```bash
-# Navigate to the project directory
-cd restaurant-simulator
-
-# Run a single restaurant simulation (default: Restaurant #1, real-time mode)
-go run main.go
-
-# Run a specific restaurant simulation in real-time mode
-go run main.go -restaurant=5 -mode=realtime
-
-# Run in fast-forward mode (shows sequence without waiting)
-go run main.go -restaurant=1 -mode=fastforward
-
-# Run multiple restaurant simulations simultaneously
-go run main.go -restaurant=1 -mode=fastforward &
-go run main.go -restaurant=2 -mode=fastforward &
-go run main.go -restaurant=3 -mode=fastforward &
-wait
+python restaurant_simulator.py
 ```
 
-## Simulation Modes
+**Option 2: Using the run script**
+```bash
+python run_simulator.py
+```
 
-### Real-Time Mode (Default)
-- Simulates actual time delays
-- Perfect for watching the restaurant operations unfold
-- Shows realistic timing for order processing
+**Option 3: As a module**
+```bash
+python -m restaurant_simulator
+```
 
-### Fast-Forward Mode
-- Shows the sequence of events without waiting
-- Displays simulated delays with ⏱️ emoji
-- Perfect for quick analysis and testing
-- Useful for running multiple restaurant simulations
+### Available Commands
 
-## Configuration
+- `start` - Start the simulation
+- `stop` - Stop the simulation  
+- `menu` - Display the complete menu
+- `order <type> <name>` - Create a sample order
+  - Types: `drive_thru`, `dine_in`, `uber_eats`, `grubhub`, `doordash`
+- `status` - Show current restaurant status
+- `details <order_id>` - Show detailed order information
+- `quit` - Exit the simulator
 
-The restaurant can be configured with:
-- Restaurant number (1-999, default: 1) - passed as command-line argument
-- Simulation mode (realtime/fastforward, default: realtime)
-- Number of chefs (default: 3)
-- Kitchen capacity (default: 10 orders)
-- Restaurant name (automatically generated as "Restaurant #X - The Golden Spoon")
+### Example Usage
 
-## Command Line Arguments
+```bash
+# Start the simulation
+start
 
-- `-restaurant=N`: Specify the restaurant number (1-999)
-- `-mode=MODE`: Simulation mode - 'realtime'/'rt' or 'fastforward'/'ff'
-- `-h` or `--help`: Show help information
+# Create a drive-thru order
+order drive_thru John Smith
 
-## Sample Output
+# Create a delivery order
+order uber_eats Jane Doe
 
-The simulation will show:
-- Order creation and processing
-- Kitchen load and capacity
-- Order status updates
-- Delivery confirmations
-- Final statistics including order counts by status
-- Total processing times for each order
+# Check status
+status
 
-## Architecture
+# View order details
+details <order_id>
 
-- **Restaurant**: Main system managing orders and statistics
-- **Kitchen**: Handles order preparation with chef management
-- **Order**: Represents individual customer orders
-- **MenuItem**: Defines available menu items with pricing and prep times
+# Stop simulation
+stop
+```
 
-The system uses Go channels for communication between components and goroutines for concurrent processing.
+## Project Structure
+
+```
+restaurant-simulator/
+├── order_simulator/           # Order simulation package
+│   ├── __init__.py           # Package initialization
+│   ├── order_models.py       # Data models and enums
+│   ├── menu_data.py          # Menu items and categories
+│   ├── order_processor.py    # Order processing logic
+│   └── external_services.py  # Delivery service integrations
+├── restaurant_simulator.py   # Main simulator application
+├── demo.py                   # Demo script
+├── run_simulator.py          # Convenience run script
+├── setup.py                  # Package setup script
+├── requirements.txt          # Dependencies (none required)
+└── README.md                # This file
+```
+
+## Key Components
+
+### Order Models (`order_simulator/order_models.py`)
+- `Order`: Main order entity with customer, items, and status
+- `OrderItem`: Individual menu items with customizations
+- `Customer`: Customer information and preferences
+- `MenuItem`: Menu item definitions with pricing and nutrition info
+- Enums for order types, statuses, and categories
+
+### Menu System (`order_simulator/menu_data.py`)
+- Comprehensive ACSP inspired menu
+- 30+ menu items across 8 categories
+- Nutritional information and allergen data
+- Customization options for each item
+- Search and filtering capabilities
+
+### Order Processing (`order_simulator/order_processor.py`)
+- Order creation and validation
+- Status management and transitions
+- Queue management and wait time calculation
+- Order statistics and reporting
+- Customer management
+
+### External Services (`order_simulator/external_services.py`)
+- Mock implementations of delivery service APIs
+- Order creation and status management
+- Fee calculation (delivery and service fees)
+- Service-specific business logic
+
+### Main Simulator (`restaurant_simulator.py`)
+- Interactive CLI interface
+- Real-time order processing simulation
+- Status monitoring and display
+- Sample order generation for testing
+
+## Customization
+
+### Adding New Menu Items
+Edit `order_simulator/menu_data.py` and add new `MenuItem` objects to the `MENU_ITEMS` list.
+
+### Adding New Order Types
+1. Add new enum value to `OrderType` in `order_simulator/order_models.py`
+2. Implement corresponding service in `order_simulator/external_services.py`
+3. Update `ExternalServiceManager` to handle the new type
+
+### Modifying Order Processing
+Edit `order_simulator/order_processor.py` to customize order flow, validation rules, or business logic.
+
+## Simulation Features
+
+- **Real-time Processing**: Orders are processed in real-time with configurable speed
+- **Queue Management**: Orders are queued and processed in order
+- **Wait Time Estimation**: Calculates estimated wait times based on queue position
+- **Status Tracking**: Complete order lifecycle tracking
+- **Statistics**: Real-time restaurant performance metrics
+- **External Integration**: Seamless integration with delivery services
+
+## Future Enhancements
+
+- Web-based dashboard interface
+- Database persistence
+- Real API integrations
+- Payment processing
+- Inventory management
+- Staff scheduling
+- Analytics and reporting
+- Multi-location support
+
+## License
+
+This project is for educational and demonstration purposes.
