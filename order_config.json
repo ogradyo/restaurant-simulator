@@ -1,0 +1,53 @@
+{
+  "order_generation": {
+    "num_orders": 5,
+    "order_types": [
+      "drive_thru",
+      "dine_in",
+      "uber_eats",
+      "grubhub",
+      "doordash"
+    ],
+    "include_metadata": true
+  },
+  "message_formats": {
+    "json": {
+      "enabled": true,
+      "destination": "file"
+    },
+    "xml": {
+      "enabled": true,
+      "destination": "file"
+    },
+    "csv": {
+      "enabled": false,
+      "destination": "file"
+    },
+    "pos": {
+      "enabled": true,
+      "destination": "file"
+    },
+    "kitchen": {
+      "enabled": true,
+      "destination": "file"
+    },
+    "delivery": {
+      "enabled": true,
+      "destination": "file"
+    }
+  },
+  "delivery": {
+    "output_directory": "order_messages",
+    "file_naming": "order_{order_id}_{format}_{timestamp}",
+    "http_endpoints": {
+      "pos_system": "http://localhost:8080/api/orders",
+      "kitchen_display": "http://localhost:8081/api/kitchen",
+      "delivery_service": "http://localhost:8082/api/delivery"
+    }
+  },
+  "continuous_mode": {
+    "enabled": false,
+    "interval_seconds": 30,
+    "orders_per_batch": 3
+  }
+}
